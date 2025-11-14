@@ -1,21 +1,21 @@
-# CineVault - Movie Discovery Application
+# MovieFlixPro - Movie Discovery Application
 
 A modern movie discovery application built with React, Vite, and OMDB API.
 
 ## Project Info
 
-**Name**: CineVault
+**Name**: MovieFlixPro
 **Type**: Movie Discovery Web Application
 **Status**: Production Ready
 
 ## Features
 
-- 🎬 Browse trending and popular movies
-- 🔍 Search movies by title
-- 📺 View detailed movie information with ratings and genres
-- 🎨 Beautiful, responsive UI with dark theme
-- ⚡ Fast performance with Vite build tool
-- 🌐 Real-time data from OMDB API
+- Browse trending and popular movies
+- Search movies by title
+- View detailed movie information with ratings and genres
+- Beautiful, responsive UI with dark theme
+- Fast performance with Vite build tool
+- Real-time data from OMDB API
 
 ## How to Get Started
 

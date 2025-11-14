@@ -21,17 +21,24 @@ const MovieDetails = () => {
           tmdbApi.getMovieDetails(id),
           tmdbApi.getSimilarMovies(id),
         ]);
-        setMovie(details);
-        setSimilarMovies(similar);
+        if (details && details.id) {
+          setMovie(details);
+        }
+        if (similar && Array.isArray(similar)) {
+          setSimilarMovies(similar);
+        }
       } catch (error) {
         console.error("Error fetching movie details:", error);
+        setMovie(null);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchMovieDetails();
-    window.scrollTo(0, 0);
+    if (id) {
+      fetchMovieDetails();
+      window.scrollTo(0, 0);
+    }
   }, [id]);
 
   if (loading) {

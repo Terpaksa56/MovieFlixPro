@@ -18,9 +18,14 @@ const Home = () => {
           tmdbApi.getPopular(),
         ]);
 
-        setFeaturedMovie(trending[0]);
-        setTrendingMovies(trending);
-        setPopularMovies(popular);
+        if (trending && trending.length > 0) {
+          setFeaturedMovie(trending[0]);
+          setTrendingMovies(trending);
+        }
+        
+        if (popular && popular.length > 0) {
+          setPopularMovies(popular);
+        }
       } catch (error) {
         console.error("Error fetching movies:", error);
       } finally {

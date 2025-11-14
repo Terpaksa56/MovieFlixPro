@@ -26,7 +26,7 @@ const Navbar = () => {
             <div className="absolute inset-0 bg-primary/20 blur-xl group-hover:blur-2xl transition-all duration-500 opacity-0 group-hover:opacity-100" />
           </div>
           <span className="text-3xl font-bold bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent animate-fade-in">
-            CineVault
+            MovieFlix Pro
           </span>
         </Link>
 

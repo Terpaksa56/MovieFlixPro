@@ -48,7 +48,7 @@ const MovieSection = ({ title, movies }) => {
   };
 
   return (
-    <section className="py-12 animate-fade-in">
+    <section className="py-16 animate-fade-in">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between mb-8">
           <h2 className="text-4xl font-bold bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent animate-fade-in">
@@ -82,7 +82,7 @@ const MovieSection = ({ title, movies }) => {
           {movies.map((movie, index) => (
             <div 
               key={movie.id} 
-              className="flex-none w-56 animate-scale-in"
+              className="flex-none w-56 pt-6 animate-scale-in"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
               <MovieCard movie={movie} />

@@ -13,7 +13,7 @@ const Footer = () => {
             <Link to="/" className="flex items-center gap-3 group">
               <Film className="w-8 h-8 text-primary transition-transform duration-300 group-hover:scale-110 group-hover:rotate-12" />
               <span className="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                CineVault
+                MovieFlix Pro
               </span>
             </Link>
             <p className="text-sm text-muted-foreground">
@@ -75,19 +75,13 @@ const Footer = () => {
             <h3 className="font-semibold text-foreground mb-4">Follow Us</h3>
             <div className="flex gap-4">
               <a 
-                href="#" 
+                href="https://github.com/terpaksa56" 
                 className="w-10 h-10 rounded-full bg-card border border-border flex items-center justify-center hover:bg-primary hover:border-primary hover:scale-110 transition-all duration-300 group"
               >
                 <Github className="w-5 h-5 text-muted-foreground group-hover:text-primary-foreground transition-colors duration-300" />
               </a>
               <a 
-                href="#" 
-                className="w-10 h-10 rounded-full bg-card border border-border flex items-center justify-center hover:bg-primary hover:border-primary hover:scale-110 transition-all duration-300 group"
-              >
-                <Twitter className="w-5 h-5 text-muted-foreground group-hover:text-primary-foreground transition-colors duration-300" />
-              </a>
-              <a 
-                href="#" 
+                href="https://www.instagram.com/bintangamrl26/" 
                 className="w-10 h-10 rounded-full bg-card border border-border flex items-center justify-center hover:bg-primary hover:border-primary hover:scale-110 transition-all duration-300 group"
               >
                 <Instagram className="w-5 h-5 text-muted-foreground group-hover:text-primary-foreground transition-colors duration-300" />
@@ -100,10 +94,10 @@ const Footer = () => {
         <div className="pt-8 border-t border-border/50">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-sm text-muted-foreground text-center md:text-left">
-              © {currentYear} CineVault. All rights reserved. Data provided by TMDB.
+              © {currentYear} MovieFlix Pro. All rights reserved. Data provided by OMDB.
             </p>
             <p className="text-sm text-muted-foreground flex items-center gap-2">
-              Made with <Heart className="w-4 h-4 text-red-500 fill-current animate-pulse" /> for movie lovers
+              Made by <Heart className="w-4 h-4 text-red-500 fill-current animate-pulse" /> terpaksa56
             </p>
           </div>
         </div>

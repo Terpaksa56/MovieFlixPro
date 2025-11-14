@@ -6,13 +6,13 @@ const MovieCard = ({ movie }) => {
   return (
     <Link
       to={`/movie/${movie.id}`}
-      className="group block relative rounded-xl overflow-hidden bg-card transition-all duration-500 hover:scale-[1.08] hover:shadow-[0_0_30px_rgba(6,182,212,0.4)] hover:-translate-y-2"
+      className="group block relative rounded-xl overflow-hidden bg-card transition-all duration-500 hover:scale-105 hover:shadow-[0_0_20px_rgba(6,182,212,0.3)] hover:-translate-y-1"
     >
       <div className="relative aspect-[2/3] overflow-hidden">
         <img
           src={getImageUrl(movie.poster_path)}
           alt={movie.title}
-          className="w-full h-full object-cover transition-all duration-700 group-hover:scale-125 group-hover:brightness-50"
+          className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:brightness-60"
           loading="lazy"
         />
         
@@ -27,7 +27,7 @@ const MovieCard = ({ movie }) => {
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent opacity-60 group-hover:opacity-90 transition-opacity duration-500" />
         
         {/* Rating Badge */}
-        <div className="absolute top-3 right-3 flex items-center gap-1.5 bg-background/95 backdrop-blur-md px-3 py-1.5 rounded-full shadow-lg transform transition-all duration-500 group-hover:scale-110 border border-primary/20">
+        <div className="absolute top-3 right-3 flex items-center gap-1.5 bg-background/95 backdrop-blur-md px-3 py-1.5 rounded-full shadow-lg transform transition-all duration-500 group-hover:scale-105 border border-primary/20">
           <Star className="w-3.5 h-3.5 fill-yellow-400 text-yellow-400" />
           <span className="text-xs font-bold text-foreground">{movie.vote_average.toFixed(1)}</span>
         </div>

@@ -12,9 +12,14 @@ const Trending = () => {
     const fetchTrending = async () => {
       try {
         const trending = await tmdbApi.getTrending();
-        setMovies(trending);
+        if (Array.isArray(trending)) {
+          setMovies(trending);
+        } else {
+          setMovies([]);
+        }
       } catch (error) {
         console.error("Error fetching trending movies:", error);
+        setMovies([]);
       } finally {
         setLoading(false);
       }

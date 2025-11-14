@@ -1,73 +1,121 @@
-# Welcome to your Lovable project
+# CineVault - Movie Discovery Application
 
-## Project info
+A modern movie discovery application built with React, Vite, and OMDB API.
 
-**URL**: https://lovable.dev/projects/ca6aa973-d3d1-4b21-92dd-a8623a650881
+## Project Info
 
-## How can I edit this code?
+**Name**: CineVault
+**Type**: Movie Discovery Web Application
+**Status**: Production Ready
 
-There are several ways of editing your application.
+## Features
 
-**Use Lovable**
+- 🎬 Browse trending and popular movies
+- 🔍 Search movies by title
+- 📺 View detailed movie information with ratings and genres
+- 🎨 Beautiful, responsive UI with dark theme
+- ⚡ Fast performance with Vite build tool
+- 🌐 Real-time data from OMDB API
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/ca6aa973-d3d1-4b21-92dd-a8623a650881) and start prompting.
+## How to Get Started
 
-Changes made via Lovable will be committed automatically to this repo.
+### Prerequisites
 
-**Use your preferred IDE**
+- Node.js 16+ 
+- npm or yarn
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
+### Installation Steps
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
+# Step 1: Clone the repository
 git clone <YOUR_GIT_URL>
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+# Step 2: Navigate to the project directory
+cd cinestream-navigator-main
 
-# Step 3: Install the necessary dependencies.
-npm i
+# Step 3: Install dependencies
+npm install
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Step 4: Setup OMDB API Key
+# Create a .env file in the root directory
+echo "VITE_OMDB_API_KEY=ba76f17d" > .env
+
+# Step 5: Start the development server
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+The application will be available at `http://localhost:8080`
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### Build for Production
 
-**Use GitHub Codespaces**
+```sh
+npm run build
+npm run preview
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
+## Technologies Used
 
 This project is built with:
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+- **Vite** - Fast build tool
+- **React 18** - UI library
+- **React Router** - Client-side routing
+- **Tailwind CSS** - Styling framework
+- **Shadcn/ui** - Component library (39+ components)
+- **OMDB API** - Movie data source
+- **Lucide Icons** - Icon library
 
-## How can I deploy this project?
+## Project Structure
 
-Simply open [Lovable](https://lovable.dev/projects/ca6aa973-d3d1-4b21-92dd-a8623a650881) and click on Share -> Publish.
+```
+src/
+├── components/           # React components
+│   ├── ui/              # Shadcn UI components
+│   ├── Navbar.jsx
+│   ├── Hero.jsx
+│   ├── MovieCard.jsx
+│   └── ...
+├── pages/               # Page components
+│   ├── Home.jsx
+│   ├── SearchResults.jsx
+│   ├── MovieDetails.jsx
+│   └── ...
+├── services/            # API services
+│   └── tmdb.js
+├── hooks/               # React hooks
+├── lib/                 # Utility functions
+├── App.jsx
+└── main.jsx
+```
 
-## Can I connect a custom domain to my Lovable project?
+## API Configuration
 
-Yes, you can!
+This project uses OMDB API. To use your own API key:
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+1. Go to https://www.omdbapi.com/apikey.aspx
+2. Get your API key
+3. Create `.env` file with: `VITE_OMDB_API_KEY=your_key_here`
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+## Available Scripts
+
+```bash
+npm run dev          # Start development server
+npm run build        # Build for production
+npm run preview      # Preview production build
+npm run lint         # Run ESLint
+```
+
+## Development Notes
+
+- The project has been converted from TypeScript to JavaScript (JSX)
+- All TypeScript files have been converted to JSX format
+- React Router future flags are enabled for v7 compatibility
+- Comprehensive error handling for API calls
+
+## License
+
+MIT
+
+## Support
+
+For issues and questions, please check the documentation or create an issue in the repository.

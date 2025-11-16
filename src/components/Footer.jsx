@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Film, Github, Twitter, Instagram, Heart } from "lucide-react";
+import { Film, Github, Twitter, Instagram } from "lucide-react";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -97,7 +97,7 @@ const Footer = () => {
               © {currentYear} MovieFlix Pro. All rights reserved. Data provided by OMDB.
             </p>
             <p className="text-sm text-muted-foreground flex items-center gap-2">
-              Made by <Heart className="w-4 h-4 text-red-500 fill-current animate-pulse" /> terpaksa56
+              Made by Terpaksa56
             </p>
           </div>
         </div>

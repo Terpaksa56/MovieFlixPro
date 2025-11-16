@@ -1,22 +1,42 @@
 import { Play, Info, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { getImageUrl } from "@/services/tmdb";
+import { useEffect } from "react";
 
 const Hero = ({ movie }) => {
+  useEffect(() => {
+    if (!movie) return;
+    const url = getImageUrl(movie.backdrop_path || movie.poster_path);
+    // add preload link for hero image to improve LCP
+    const existing = document.querySelector(`link[rel=preload][href="${url}"]`);
+    if (!existing) {
+      const link = document.createElement("link");
+      link.rel = "preload";
+      link.as = "image";
+      link.href = url;
+      link.crossOrigin = "anonymous";
+      document.head.appendChild(link);
+      return () => {
+        try { document.head.removeChild(link); } catch (e) {}
+      };
+    }
+  }, [movie]);
+
   return (
     <div className="relative h-screen md:h-[90vh] w-full overflow-hidden animate-fade-in">
-      {/* Background Image */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{
-          backgroundImage: `url(${movie.backdrop_path || movie.poster_path})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      >
-        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-background/40" />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
-      </div>
+      {/* Background Image (use <img> for better LCP) */}
+      <img
+        src={getImageUrl(movie.backdrop_path || movie.poster_path)}
+        alt={movie.title || "Featured movie"}
+        className="absolute inset-0 w-full h-full object-cover"
+        loading="eager"
+        decoding="async"
+        fetchPriority="high"
+        aria-hidden={false}
+      />
+      <div className="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-background/40" />
+      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
 
       {/* Content */}
       <div className="relative h-full container mx-auto px-4 md:px-6 flex items-center justify-center md:justify-start py-8">
@@ -70,3 +90,4 @@ const Hero = ({ movie }) => {
 };
 
 export default Hero;
+

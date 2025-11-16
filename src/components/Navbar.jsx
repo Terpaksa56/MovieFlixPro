@@ -55,7 +55,7 @@ const Navbar = () => {
               Home
             </Button>
           </Link>
-          <Link to="/trending">
+          <Link to="/trending" onMouseEnter={() => import("@/pages/Trending")}> 
             <Button 
               variant="ghost" 
               className="rounded-full hover:bg-secondary hover:text-secondary-foreground transition-all duration-300 font-semibold px-6"

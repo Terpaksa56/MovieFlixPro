@@ -14,6 +14,7 @@ const MovieCard = ({ movie }) => {
           alt={movie.title}
           className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:brightness-60"
           loading="lazy"
+          decoding="async"
         />
         
         {/* Play Button Overlay */}

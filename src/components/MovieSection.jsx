@@ -9,48 +9,45 @@ const MovieSection = ({ title, movies }) => {
 
   const scroll = (direction) => {
     if (scrollRef.current) {
-      const scrollAmount = direction === "left" ? -800 : 800;
+      const viewportWidth = scrollRef.current.clientWidth || window.innerWidth;
+      const baseAmount = viewportWidth < 640 ? Math.round(viewportWidth * 0.6) : 800;
+      const scrollAmount = direction === "left" ? -baseAmount : baseAmount;
       scrollRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
     }
   };
 
-  // Auto-scroll carousel
   useEffect(() => {
     const startAutoScroll = () => {
       autoScrollRef.current = setInterval(() => {
         if (scrollRef.current) {
           const maxScroll = scrollRef.current.scrollWidth - scrollRef.current.clientWidth;
           const currentScroll = scrollRef.current.scrollLeft;
-          
+          const step = scrollRef.current.clientWidth < 640 ? Math.round(scrollRef.current.clientWidth * 0.25) : 400;
+
           if (currentScroll >= maxScroll - 10) {
             scrollRef.current.scrollTo({ left: 0, behavior: "smooth" });
           } else {
-            scrollRef.current.scrollBy({ left: 400, behavior: "smooth" });
+            scrollRef.current.scrollBy({ left: step, behavior: "smooth" });
           }
         }
       }, 4000);
     };
 
     startAutoScroll();
-
     return () => {
-      if (autoScrollRef.current) {
-        clearInterval(autoScrollRef.current);
-      }
+      if (autoScrollRef.current) clearInterval(autoScrollRef.current);
     };
   }, []);
 
   const handleManualScroll = (direction) => {
-    if (autoScrollRef.current) {
-      clearInterval(autoScrollRef.current);
-    }
+    if (autoScrollRef.current) clearInterval(autoScrollRef.current);
     scroll(direction);
   };
 
   return (
-    <section className="py-16 animate-fade-in">
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between mb-8">
+    <section className="pt-20 sm:pt-12 pb-12 animate-fade-in">
+      <div className="container mx-auto px-3 sm:px-4">
+        <div className="flex items-center justify-between mb-6">
           <h2 className="text-4xl font-bold bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent animate-fade-in">
             {title}
           </h2>
@@ -59,7 +56,7 @@ const MovieSection = ({ title, movies }) => {
               variant="ghost"
               size="icon"
               onClick={() => handleManualScroll("left")}
-              className="rounded-full bg-card/50 backdrop-blur-sm hover:bg-primary hover:text-primary-foreground transition-all duration-300 hover:scale-110 border border-border"
+              className="rounded-full bg-card/50 backdrop-blur-sm hover:bg-primary hover:text-primary-foreground transition-all duration-300 hover:scale-105 border border-border"
             >
               <ChevronLeft className="w-5 h-5" />
             </Button>
@@ -67,7 +64,7 @@ const MovieSection = ({ title, movies }) => {
               variant="ghost"
               size="icon"
               onClick={() => handleManualScroll("right")}
-              className="rounded-full bg-card/50 backdrop-blur-sm hover:bg-primary hover:text-primary-foreground transition-all duration-300 hover:scale-110 border border-border"
+              className="rounded-full bg-card/50 backdrop-blur-sm hover:bg-primary hover:text-primary-foreground transition-all duration-300 hover:scale-105 border border-border"
             >
               <ChevronRight className="w-5 h-5" />
             </Button>
@@ -76,13 +73,13 @@ const MovieSection = ({ title, movies }) => {
 
         <div
           ref={scrollRef}
-          className="flex gap-6 overflow-x-auto scrollbar-hide scroll-smooth pb-6"
+          className="flex gap-6 overflow-x-auto scrollbar-hide scroll-smooth pb-6 pl-2 sm:pl-0 pt-4"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
           {movies.map((movie, index) => (
-            <div 
-              key={movie.id} 
-              className="flex-none w-56 pt-6 animate-scale-in"
+            <div
+              key={movie.id}
+              className="flex-none w-56 animate-scale-in mt-4 sm:mt-0"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
               <MovieCard movie={movie} />

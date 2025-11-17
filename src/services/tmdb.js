@@ -4,6 +4,42 @@
 const OMDB_API_KEY = import.meta.env.VITE_OMDB_API_KEY || "ba76f17d";
 const OMDB_BASE_URL = "https://www.omdbapi.com";
 
+// Simple in-memory cache dengan TTL
+class CacheManager {
+  constructor() {
+    this.cache = new Map();
+    this.timers = new Map();
+  }
+
+  set(key, value, ttlMs = 3600000) { // 1 hour default
+    if (this.timers.has(key)) {
+      clearTimeout(this.timers.get(key));
+    }
+    this.cache.set(key, value);
+    const timer = setTimeout(() => {
+      this.cache.delete(key);
+      this.timers.delete(key);
+    }, ttlMs);
+    this.timers.set(key, timer);
+  }
+
+  get(key) {
+    return this.cache.get(key);
+  }
+
+  has(key) {
+    return this.cache.has(key);
+  }
+
+  clear() {
+    this.cache.clear();
+    this.timers.forEach(timer => clearTimeout(timer));
+    this.timers.clear();
+  }
+}
+
+const movieCache = new CacheManager();
+
 export const getImageUrl = (posterUrl, size = "300") => {
   if (!posterUrl || posterUrl === "N/A") {
     return "https://via.placeholder.com/300x450?text=No+Poster";
@@ -20,8 +56,22 @@ const handleApiError = (error) => {
   return [];
 };
 
-// Add delay to prevent rate limiting
+// Optimized delay dengan batching
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+// Batch multiple requests dengan concurrency limit
+const batchFetch = async (items, fetchFn, concurrency = 3, delayMs = 50) => {
+  const results = [];
+  for (let i = 0; i < items.length; i += concurrency) {
+    const batch = items.slice(i, i + concurrency);
+    const batchResults = await Promise.all(batch.map(fetchFn));
+    results.push(...batchResults);
+    if (i + concurrency < items.length) {
+      await delay(delayMs);
+    }
+  }
+  return results.filter(Boolean);
+};
 
 const POPULAR_MOVIES = [
   "tt0111161", // The Shawshank Redemption
@@ -55,8 +105,15 @@ const TRENDING_MOVIES = [
 
 const fetchMovieById = async (imdbId) => {
   try {
+    // Check cache first
+    const cacheKey = `movie_${imdbId}`;
+    if (movieCache.has(cacheKey)) {
+      return movieCache.get(cacheKey);
+    }
+
     const response = await fetch(
-      `${OMDB_BASE_URL}/?i=${imdbId}&apikey=${OMDB_API_KEY}&type=movie`
+      `${OMDB_BASE_URL}/?i=${imdbId}&apikey=${OMDB_API_KEY}&type=movie`,
+      { signal: AbortSignal.timeout(5000) } // 5 second timeout
     );
     
     if (!response.ok) {
@@ -71,7 +128,7 @@ const fetchMovieById = async (imdbId) => {
     }
 
     // Transform OMDB response to match our component structure
-    return {
+    const movie = {
       id: data.imdbID,
       title: data.Title,
       overview: data.Plot || "No description available",
@@ -85,6 +142,10 @@ const fetchMovieById = async (imdbId) => {
       imdbRating: data.imdbRating,
       imdbVotes: data.imdbVotes,
     };
+
+    // Cache for 1 hour
+    movieCache.set(cacheKey, movie, 3600000);
+    return movie;
   } catch (error) {
     console.error(`Error fetching movie ${imdbId}:`, error.message);
     return null;
@@ -94,13 +155,7 @@ const fetchMovieById = async (imdbId) => {
 export const tmdbApi = {
   getTrending: async () => {
     try {
-      const movies = [];
-      for (const id of TRENDING_MOVIES) {
-        const movie = await fetchMovieById(id);
-        if (movie) movies.push(movie);
-        await delay(200); // Add delay to prevent rate limiting
-      }
-      return movies;
+      return await batchFetch(TRENDING_MOVIES, fetchMovieById, 4, 50);
     } catch (error) {
       return handleApiError(error);
     }
@@ -108,13 +163,7 @@ export const tmdbApi = {
 
   getPopular: async () => {
     try {
-      const movies = [];
-      for (const id of POPULAR_MOVIES) {
-        const movie = await fetchMovieById(id);
-        if (movie) movies.push(movie);
-        await delay(200); // Add delay to prevent rate limiting
-      }
-      return movies;
+      return await batchFetch(POPULAR_MOVIES, fetchMovieById, 4, 50);
     } catch (error) {
       return handleApiError(error);
     }
@@ -124,8 +173,14 @@ export const tmdbApi = {
     try {
       if (!query || query.length < 2) return [];
 
+      const cacheKey = `search_${query.toLowerCase()}`;
+      if (movieCache.has(cacheKey)) {
+        return movieCache.get(cacheKey);
+      }
+
       const response = await fetch(
-        `${OMDB_BASE_URL}/?s=${encodeURIComponent(query)}&apikey=${OMDB_API_KEY}&type=movie&page=1`
+        `${OMDB_BASE_URL}/?s=${encodeURIComponent(query)}&apikey=${OMDB_API_KEY}&type=movie&page=1`,
+        { signal: AbortSignal.timeout(5000) }
       );
       
       if (!response.ok) {
@@ -138,14 +193,15 @@ export const tmdbApi = {
         return [];
       }
 
-      // Get full details for each search result with delay
-      const movieDetails = [];
-      for (const movie of (data.Search || []).slice(0, 10)) {
-        const details = await fetchMovieById(movie.imdbID);
-        if (details) movieDetails.push(details);
-        await delay(200);
-      }
+      // Batch fetch details dengan concurrency
+      const movieDetails = await batchFetch(
+        (data.Search || []).slice(0, 10),
+        (movie) => fetchMovieById(movie.imdbID),
+        3,
+        50
+      );
 
+      movieCache.set(cacheKey, movieDetails, 1800000); // 30 min cache
       return movieDetails;
     } catch (error) {
       console.error("Error searching movies:", error);
@@ -155,7 +211,6 @@ export const tmdbApi = {
 
   getMovieDetails: async (movieId) => {
     try {
-      // If movieId looks like a number, assume it's an OMDB imdbID format
       const imdbId = movieId.startsWith("tt") ? movieId : `tt${movieId.padStart(7, "0")}`;
       return await fetchMovieById(imdbId);
     } catch (error) {
@@ -166,17 +221,19 @@ export const tmdbApi = {
 
   getSimilarMovies: async (movieId) => {
     try {
-      // Get a random selection of popular movies as "similar"
-      const shuffled = [...POPULAR_MOVIES].sort(() => Math.random() - 0.5);
-      const movies = [];
-      for (const id of shuffled.slice(0, 12)) {
-        const movie = await fetchMovieById(id);
-        if (movie) movies.push(movie);
-        await delay(200);
+      const cacheKey = `similar_${movieId}`;
+      if (movieCache.has(cacheKey)) {
+        return movieCache.get(cacheKey);
       }
+
+      const shuffled = [...POPULAR_MOVIES].sort(() => Math.random() - 0.5);
+      const movies = await batchFetch(shuffled.slice(0, 12), fetchMovieById, 4, 50);
+      movieCache.set(cacheKey, movies, 3600000);
       return movies;
     } catch (error) {
       return handleApiError(error);
     }
   },
+
+  clearCache: () => movieCache.clear(),
 };

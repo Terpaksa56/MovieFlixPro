@@ -14,4 +14,27 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(import.meta.dirname, "./src"),
     },
   },
+  build: {
+    // Optimize bundle size
+    minify: "terser",
+    terserOptions: {
+      compress: {
+        drop_console: mode === "production",
+      },
+    },
+    // Code splitting untuk lazy-loaded routes
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor': ['react', 'react-dom', 'react-router-dom'],
+          'ui-components': ['@radix-ui', 'lucide-react'],
+          'forms': ['react-hook-form', '@hookform/resolvers', 'zod'],
+        },
+      },
+    },
+    // CSS code splitting
+    cssCodeSplit: true,
+    // Chunking strategy
+    chunkSizeWarningLimit: 500,
+  },
 }));

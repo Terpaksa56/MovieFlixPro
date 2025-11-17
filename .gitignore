@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+
+IMPLEMENTATION_CHECKLIST.md
+
+.mcp-debug-tools

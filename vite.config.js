@@ -15,20 +15,14 @@ export default defineConfig(({ mode }) => ({
     },
   },
   build: {
-    // Optimize bundle size
-    minify: "terser",
-    terserOptions: {
-      compress: {
-        drop_console: mode === "production",
-      },
-    },
-    // Code splitting untuk lazy-loaded routes
+    minify: "esbuild",
+    cssCodeSplit: true,
+    chunkSizeWarningLimit: 500,
     rollupOptions: {
       output: {
         manualChunks: {
           vendor: ["react", "react-dom", "react-router-dom"],
           ui: [
-            // Radix UI
             "@radix-ui/react-accordion",
             "@radix-ui/react-alert-dialog",
             "@radix-ui/react-aspect-ratio",
@@ -57,6 +51,7 @@ export default defineConfig(({ mode }) => ({
             "@radix-ui/react-toggle-group",
             "@radix-ui/react-tooltip",
 
+            // UI libs
             "lucide-react",
             "cmdk",
             "sonner",
@@ -66,9 +61,5 @@ export default defineConfig(({ mode }) => ({
         },
       },
     },
-    // CSS code splitting
-    cssCodeSplit: true,
-    // Chunking strategy
-    chunkSizeWarningLimit: 500,
   },
 }));
